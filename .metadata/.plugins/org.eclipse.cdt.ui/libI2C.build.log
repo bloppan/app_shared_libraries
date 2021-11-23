@@ -1,0 +1,15 @@
+12:56:48 **** Build of configuration Release for project libI2C ****
+make all 
+Building file: ../I2C.c
+Invoking: Cross GCC Compiler
+arm-linux-gnueabihf-gcc -O3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"I2C.d" -MT"I2C.o" -o "I2C.o" "../I2C.c"
+Finished building: ../I2C.c
+ 
+Building target: libI2C.so
+Invoking: Cross GCC Linker
+arm-linux-gnueabihf-gcc -shared -o "libI2C.so"  ./I2C.o   -ldl
+Finished building target: libI2C.so
+ 
+
+12:56:49 Build Finished. 0 errors, 0 warnings. (took 770ms)
+

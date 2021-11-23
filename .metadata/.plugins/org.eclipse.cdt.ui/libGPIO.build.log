@@ -1,0 +1,15 @@
+12:45:51 **** Build of configuration Release for project libGPIO ****
+make all 
+Building file: ../GPIO.c
+Invoking: Cross GCC Compiler
+arm-linux-gnueabihf-gcc -O3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"GPIO.d" -MT"GPIO.o" -o "GPIO.o" "../GPIO.c"
+Finished building: ../GPIO.c
+ 
+Building target: libGPIO.so
+Invoking: Cross GCC Linker
+arm-linux-gnueabihf-gcc -shared -o "libGPIO.so"  ./GPIO.o   -ldl
+Finished building target: libGPIO.so
+ 
+
+12:45:52 Build Finished. 0 errors, 0 warnings. (took 772ms)
+

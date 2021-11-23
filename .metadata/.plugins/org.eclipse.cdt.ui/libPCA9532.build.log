@@ -1,0 +1,15 @@
+13:04:22 **** Incremental Build of configuration Release for project libPCA9532 ****
+make all 
+Building file: ../PCA9532.c
+Invoking: Cross GCC Compiler
+arm-linux-gnueabihf-gcc -O3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"PCA9532.d" -MT"PCA9532.o" -o "PCA9532.o" "../PCA9532.c"
+Finished building: ../PCA9532.c
+ 
+Building target: libPCA9532.so
+Invoking: Cross GCC Linker
+arm-linux-gnueabihf-gcc -shared -o "libPCA9532.so"  ./PCA9532.o   -ldl
+Finished building target: libPCA9532.so
+ 
+
+13:04:23 Build Finished. 0 errors, 0 warnings. (took 824ms)
+
