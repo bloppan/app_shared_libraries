@@ -22,19 +22,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: libGPIO.so
+all: libGPIO.so.1
 
 # Tool invocations
-libGPIO.so: $(OBJS) $(USER_OBJS)
+libGPIO.so.1: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	arm-linux-gnueabihf-gcc -shared -o "libGPIO.so" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-linux-gnueabihf-gcc -shared -o "libGPIO.so.1" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) libGPIO.so
+	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) libGPIO.so.1
 	-@echo ' '
 
 .PHONY: all clean dependents
