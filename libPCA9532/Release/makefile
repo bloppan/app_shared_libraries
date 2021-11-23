@@ -22,19 +22,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: libPCA9532.so
+all: libPCA9532.so.1
 
 # Tool invocations
-libPCA9532.so: $(OBJS) $(USER_OBJS)
+libPCA9532.so.1: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	arm-linux-gnueabihf-gcc -shared -o "libPCA9532.so" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-linux-gnueabihf-gcc -shared -o "libPCA9532.so.1" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) libPCA9532.so
+	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) libPCA9532.so.1
 	-@echo ' '
 
 .PHONY: all clean dependents
