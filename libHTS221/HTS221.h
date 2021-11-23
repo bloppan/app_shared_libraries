@@ -25,8 +25,8 @@
 /*
  * HTS221 library location
  */
-#define		HTS221_LIBRARY_DIRECTORY	"/usr/local/lib/"
-#define		HTS221_LIBRARY_NAME			"libHTS221.so"
+#define		HTS221_LIBRARY_DIRECTORY	"/usr/lib/"
+#define		HTS221_LIBRARY_NAME			"libHTS221.so.1"
 
 /*
  * HTS221 Errors

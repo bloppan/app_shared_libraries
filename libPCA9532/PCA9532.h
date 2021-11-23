@@ -16,8 +16,8 @@
 /*
  * PCA9532 library location
  */
-#define		PCA9532_LIBRARY_DIRECTORY	"/usr/local/lib/"
-#define		PCA9532_LIBRARY_NAME		"libPCA9532.so"
+#define		PCA9532_LIBRARY_DIRECTORY	"/usr/lib/"
+#define		PCA9532_LIBRARY_NAME		"libPCA9532.so.1"
 
 /*
  * LED colors

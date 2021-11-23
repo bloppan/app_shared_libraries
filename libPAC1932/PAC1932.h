@@ -28,8 +28,8 @@
 /*
  * PAC1932 library location
  */
-#define		PAC1932_LIBRARY_DIRECTORY	"/usr/local/lib/"
-#define		PAC1932_LIBRARY_NAME		"libPAC1932.so"
+#define		PAC1932_LIBRARY_DIRECTORY	"/usr/lib/"
+#define		PAC1932_LIBRARY_NAME		"libPAC1932.so.1"
 
 /*
  * PAC1932 Errors

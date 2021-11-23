@@ -18,9 +18,10 @@
 #include <dirent.h>
 #include <dlfcn.h>
 #include "../../app_includes/app_typedef.h"
+#include "../../app_includes/app_errors.h"
 
-#define		GPIO_LIBRARY_DIRECTORY		"/usr/local/lib/"
-#define		GPIO_LIBRARY_NAME			"libGPIO.so"
+#define		GPIO_LIBRARY_DIRECTORY		"/usr/lib/"
+#define		GPIO_LIBRARY_NAME			"libGPIO.so.1"
 
 #define 	GPIO_NUMBER(bank, index)    ((((bank)-1)*32)+((index)&31))
 

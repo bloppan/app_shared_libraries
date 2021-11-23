@@ -27,8 +27,8 @@
 /*
  * I2C library location
  */
-#define		I2C_LIBRARY_DIRECTORY	"/usr/local/lib/"
-#define		I2C_LIBRARY_NAME		"libI2C.so"
+#define		I2C_LIBRARY_DIRECTORY	"/usr/lib/"
+#define		I2C_LIBRARY_NAME		"libI2C.so.1"
 
 /*
  * I2C Errors
