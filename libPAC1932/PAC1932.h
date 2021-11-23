@@ -123,43 +123,6 @@
 #define		MID_LENGTH				1
 #define		REV_LENGTH				1
 
-/*
- * @brief	Enum de canales de medida
- */
-typedef enum {
-
-	SOM,
-	Peripherals,
-	Terminal_Battery,
-	USB_Connector
-
-}Channels_Enum;
-
-/*
- * @brief	Estructura que almacena valores electricos de un canal
- */
-typedef struct {
-
-	float	Intensity;	// Valor de intensidad en miliamperios (mA)
-	float	Voltage;	// Valor de voltaje en voltios (V)
-	float 	Power;		// Valor de potencia consumida en watios (W)
-
-}Electrial_Values_struct;
-
-/*
- * @brief	Estructura que almacena los datos del sensor PAC1932
- */
-typedef struct {
-
-	Electrial_Values_struct	SOM;				// Estructura que contiene los valores electricos del SOM
-	Electrial_Values_struct Peripherals;		// Estructura que contiene los valores electricos de los perifericos
-	Electrial_Values_struct	Terminal_Battery;	// Estructura que contiene los valores electricos del terminal movil
-	Electrial_Values_struct USB_Connector;		// Estructura que contiene los valores electricos del conector USB
-
-	uint32_t	Acc_Count;	// Numero de acumulaciones (sumas) realizadas en los registros VPOWERn_ACC
-
-}PAC1932_struct;
-
 
 #endif /* PAC1932_H_ */
 
