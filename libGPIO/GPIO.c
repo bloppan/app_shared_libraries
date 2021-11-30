@@ -29,11 +29,11 @@ error_type configGPIO(uint8_t gpio, char* direction)
 
 		codeError = APP_REPORT(GPIO_ERROR, OPENING_EXPORT_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tOpening GPIO %d export file: %s \n", gpio, strerror(errno));
+		printf("[ERROR]\t[GPIO]\t\tOpening GPIO %d export file: %s \n", gpio, strerror(errno));
 #endif
 	}else{
 #ifdef DEBUG
-		printf("[OK]\t[GPIO]\tExport file opened \n");
+		printf("[OK]\t[GPIO]\t\tExport file opened \n");
 #endif
 		// Numero de gpio como cadena de caracteres
 		sprintf(gpio_str, "%d", gpio);
@@ -43,7 +43,7 @@ error_type configGPIO(uint8_t gpio, char* direction)
 
 			codeError = APP_REPORT(GPIO_ERROR, WRITING_EXPORT_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tWriting GPIO %d export file: %s. Maybe the GPIO is already exported \n", gpio, strerror(errno));
+		printf("[ERROR]\t[GPIO]\t\tWriting GPIO %d export file: %s. Maybe the GPIO is already exported \n", gpio, strerror(errno));
 #endif
 		}else{
 
@@ -55,7 +55,7 @@ error_type configGPIO(uint8_t gpio, char* direction)
 
 				codeError = APP_REPORT(GPIO_ERROR, OPENING_DIRECTION_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tOpening gpio direction file: %s \n", strerror(errno));
+		printf("[ERROR]\t[GPIO]\t\tOpening gpio direction file: %s \n", strerror(errno));
 #endif
 			}else{
 
@@ -65,11 +65,11 @@ error_type configGPIO(uint8_t gpio, char* direction)
 
 						codeError = APP_REPORT(GPIO_ERROR, WRITING_DIRECTION_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tSetting GPIO %d as output \n", gpio);
+		printf("[ERROR]\t[GPIO]\t\tSetting GPIO %d as output \n", gpio);
 #endif
 					}else{
 #ifdef DEBUG
-		printf("[OK]\t[GPIO]\tGPIO %d set as out\n", gpio);
+		printf("[OK]\t[GPIO]\t\tGPIO %d set as out\n", gpio);
 #endif
 					}
 				}else if(!strncmp("in", direction, 2)){
@@ -78,17 +78,17 @@ error_type configGPIO(uint8_t gpio, char* direction)
 
 						codeError = APP_REPORT(GPIO_ERROR, WRITING_DIRECTION_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tSetting GPIO %d as input \n", gpio);
+		printf("[ERROR]\t[GPIO]\t\tSetting GPIO %d as input \n", gpio);
 #endif
 					}else{
 #ifdef DEBUG
-		printf("[OK]\t[GPIO]\tGPIO %d set as in\n", gpio);
+		printf("[OK]\t[GPIO]\t\tGPIO %d set as in\n", gpio);
 #endif
 					}
 				}else{
 					codeError = APP_REPORT(GPIO_ERROR, INVALID_DIRECTION_VALUE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tDirection \"%s\" is not valid. Must be \"out\" or \"in\" \n", direction);
+		printf("[ERROR]\t[GPIO]\t\tDirection \"%s\" is not valid. Must be \"out\" or \"in\" \n", direction);
 #endif
 				}
 				close(fd_direction);
@@ -117,11 +117,11 @@ error_type freeGPIO(uint8_t gpio)
 
 		codeError = APP_REPORT(GPIO_ERROR, OPENING_UNEXPORT_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tOpening gpio unexport file: %s \n", strerror(errno));
+		printf("[ERROR]\t[GPIO]\t\tOpening gpio unexport file: %s \n", strerror(errno));
 #endif
 	}else{
 #ifdef DEBUG
-		printf("[OK]\t[GPIO]\tUnexport file opened \n");
+		printf("[OK]\t[GPIO]\t\tUnexport file opened \n");
 #endif
 
 		// Numero de gpio como cadena de caracteres
@@ -132,11 +132,11 @@ error_type freeGPIO(uint8_t gpio)
 
 			codeError = APP_REPORT(GPIO_ERROR, WRITING_UNEXPORT_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tWriting GPIO %d unexport file: %s. Maybe the GPIO is already unexported \n", gpio, strerror(errno));
+		printf("[ERROR]\t[GPIO]\t\tWriting GPIO %d unexport file: %s. Maybe the GPIO is already unexported \n", gpio, strerror(errno));
 #endif
 		}else{
 #ifdef DEBUG
-		printf("[OK]\t[GPIO]\tUnexported GPIO %d \n", gpio);
+		printf("[OK]\t[GPIO]\t\tUnexported GPIO %d \n", gpio);
 #endif
 		}
 
@@ -169,20 +169,20 @@ error_type getGPIO_Value(uint8_t gpio, uint8_t* value)
 
 		codeError = APP_REPORT(GPIO_ERROR, OPENING_VALUE_FILE);
 #ifdef DEBUG
-	printf("[ERROR]\t[GPIO]\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
+	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
 	}else{
 		if(read(fd_value, gpio_value_str, 1) < 1){
 
 			codeError = APP_REPORT(GPIO_ERROR, READING_VALUE_FILE);
 #ifdef DEBUG
-	printf("[ERROR]\t[GPIO]\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
+	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
 		}else{
 
 			*value = atoi(gpio_value_str);
 #ifdef DEBUG
-	printf("[OK]\t[GPIO]\tGPIO %d value is: %d \n", gpio, *value);
+	printf("[OK]\t[GPIO]\t\tGPIO %d value is: %d \n", gpio, *value);
 #endif
 		}
 
@@ -213,19 +213,19 @@ error_type getGPIO_Direction(uint8_t gpio, char* direction)
 
 		codeError = APP_REPORT(GPIO_ERROR, OPENING_DIRECTION_FILE);
 #ifdef DEBUG
-	printf("[ERROR]\t[GPIO]\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
+	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
 	}else{
 		if(read(fd_direction, direction, 4) < 2){
 
 			codeError = APP_REPORT(GPIO_ERROR, READING_DIRECTION_FILE);
 #ifdef DEBUG
-	printf("[ERROR]\t[GPIO]\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
+	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
 		}else{
 
 #ifdef DEBUG
-	printf("[OK]\t[GPIO]\tGPIO %d direction is: %s \n", gpio, direction);
+	printf("[OK]\t[GPIO]\t\tGPIO %d direction is: %s \n", gpio, direction);
 #endif
 		}
 
@@ -260,7 +260,7 @@ error_type setGPIO_Value(uint8_t gpio, uint8_t value)
 
 			codeError = APP_REPORT(GPIO_ERROR, OPENING_VALUE_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tOpening GPIO %d value file: %s \n", gpio, strerror(errno));
+		printf("[ERROR]\t\t[GPIO]\tOpening GPIO %d value file: %s \n", gpio, strerror(errno));
 #endif
 		}else {
 
@@ -270,12 +270,12 @@ error_type setGPIO_Value(uint8_t gpio, uint8_t value)
 
 				codeError = APP_REPORT(GPIO_ERROR, WRITING_VALUE_FILE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tWriting GPIO %d value file: %s \n", gpio, strerror(errno));
+		printf("[ERROR]\t\t[GPIO]\tWriting GPIO %d value file: %s \n", gpio, strerror(errno));
 #endif
 
 			}else{
 #ifdef DEBUG
-		printf("[OK]\t[GPIO]\tGPIO %d value set: %s \n", gpio, gpio_value_str);
+		printf("[OK]\t[GPIO]\t\tGPIO %d value set: %s \n", gpio, gpio_value_str);
 #endif
 			}
 			close(fd_value);
@@ -284,7 +284,7 @@ error_type setGPIO_Value(uint8_t gpio, uint8_t value)
 
 		codeError = APP_REPORT(GPIO_ERROR, INVALID_OUTPUT_VALUE);
 #ifdef DEBUG
-		printf("[ERROR]\t[GPIO]\tValue must be \"0\" or \"1\" \n");
+		printf("[ERROR]\t[GPIO]\t\tValue must be \"0\" or \"1\" \n");
 #endif
 	}
 

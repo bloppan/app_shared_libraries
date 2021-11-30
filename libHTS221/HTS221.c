@@ -190,7 +190,7 @@ error_type	HTS221_getTemperature(float *Temp)
 	error:
 
 #ifdef DEBUG
-	printf("[ERROR] Reading HTS221 temperature value \n");
+	printf("[ERROR]\t[HTS221]\tReading HTS221 temperature value \n");
 #endif
 
 	return APP_REPORT(HTS221_ERROR, READING_TEMPERATURE);

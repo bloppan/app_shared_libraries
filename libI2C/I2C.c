@@ -52,7 +52,7 @@ error_type read_i2c_data(i2c_device_struct *i2c_dev)
 		if(ioctl(i2c_file, I2C_RDWR, &i2c_packet) < 0){
 
 #ifdef DEBUG
-			printf("[ERROR]\t[I2C]\tioctl: %s\n", strerror(errno));
+			printf("[ERROR]\t[I2C]\t\tioctl: %s\n", strerror(errno));
 #endif
 			errorCode = APP_REPORT(I2C_ERROR, WRITING_IOCTL_FILE);
 		}
@@ -60,7 +60,7 @@ error_type read_i2c_data(i2c_device_struct *i2c_dev)
 	}else{
 
 #ifdef DEBUG
-		printf("[ERROR]\t[I2C]\tOpen I2C port file: %s \n", strerror(errno));
+		printf("[ERROR]\t[I2C]\t\tOpen I2C port file: %s \n", strerror(errno));
 #endif
 		errorCode = APP_REPORT(I2C_ERROR, OPENING_I2C_PORT);
 	}
@@ -112,7 +112,7 @@ error_type write_i2c_data(i2c_device_struct *i2c_dev)
 		if(ioctl(i2c_file, I2C_RDWR, &i2c_packet) < 0){
 
 #ifdef DEBUG
-			printf("[ERROR]\t[I2C]\tioctl: %s\n", strerror(errno));
+			printf("[ERROR]\t[I2C]\t\tioctl: %s\n", strerror(errno));
 #endif
 			errorCode = APP_REPORT(I2C_ERROR, WRITING_IOCTL_FILE);
 		}
@@ -120,7 +120,7 @@ error_type write_i2c_data(i2c_device_struct *i2c_dev)
 	}else{
 
 #ifdef DEBUG
-		printf("[ERROR]\t[I2C]\tOpen I2C port file: %s \n", strerror(errno));
+		printf("[ERROR]\t[I2C]\t\tOpen I2C port file: %s \n", strerror(errno));
 #endif
 		errorCode = APP_REPORT(I2C_ERROR, OPENING_I2C_PORT);
 	}
