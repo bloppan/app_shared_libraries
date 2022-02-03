@@ -8,6 +8,9 @@
 #include "I2C.h"
 
 #define DEBUG
+
+static pthread_mutex_t i2c_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 /*
  * @brief	Funcion que lee datos a traves del puerto I2C
  * @param	i2c_dev		Puntero a la estructura de datos I2C
@@ -21,6 +24,9 @@ error_type read_i2c_data(i2c_device_struct *i2c_dev)
 	uint8_t outbuf[1];
 	error_type errorCode = NO_ERROR;
 
+	// Bloqueo mutex
+	pthread_mutex_lock (&i2c_mutex);
+
 	i2c_file = open(i2c_dev->i2c_port, O_RDWR);
 
 	if(i2c_file > 0){
@@ -33,8 +39,8 @@ error_type read_i2c_data(i2c_device_struct *i2c_dev)
 		outbuf[0] = i2c_dev->reg_addr;
 
 		message[0].addr 	= i2c_dev->dev_addr;
-		message[0].flags 	= 0; 		// 0 -> Write
-		message[0].len 		= 1;		// 1 byte
+		message[0].flags 	= 0; 					// 0 -> Write
+		message[0].len 		= 1;					// 1 byte
 		message[0].buf		= outbuf;
 
 		/* Ahora se configura la estructura de lectura: */
@@ -54,7 +60,7 @@ error_type read_i2c_data(i2c_device_struct *i2c_dev)
 #ifdef DEBUG
 			printf("[ERROR]\t[I2C]\t\tioctl: %s\n", strerror(errno));
 #endif
-			errorCode = APP_REPORT(I2C_ERROR, WRITING_IOCTL_FILE);
+			errorCode = APP_REPORT(I2C, WRITING_IOCTL_FILE);
 		}
 
 	}else{
@@ -62,10 +68,13 @@ error_type read_i2c_data(i2c_device_struct *i2c_dev)
 #ifdef DEBUG
 		printf("[ERROR]\t[I2C]\t\tOpen I2C port file: %s \n", strerror(errno));
 #endif
-		errorCode = APP_REPORT(I2C_ERROR, OPENING_I2C_PORT);
+		errorCode = APP_REPORT(I2C, OPENING_I2C_PORT);
 	}
 
 	close(i2c_file);
+
+	// Desbloqueo mutex
+	pthread_mutex_unlock (&i2c_mutex);
 
 	return errorCode;
 }
@@ -82,6 +91,9 @@ error_type write_i2c_data(i2c_device_struct *i2c_dev)
 	uint8_t outbuf[128] = {0};
 	error_type errorCode = NO_ERROR;
 
+	// Bloqueo mutex
+	pthread_mutex_lock (&i2c_mutex);
+
 	i2c_file = open(i2c_dev->i2c_port, O_RDWR);
 
 	if(i2c_file > 0){
@@ -90,6 +102,7 @@ error_type write_i2c_data(i2c_device_struct *i2c_dev)
 		 * Antes de leer un registro, se debe indicar mediante una operacion de escritura
 		 * el registro que se quiere leer:
 		 */
+		memset(outbuf, 0, sizeof(outbuf));
 
 		outbuf[0] = i2c_dev->reg_addr;
 
@@ -114,7 +127,7 @@ error_type write_i2c_data(i2c_device_struct *i2c_dev)
 #ifdef DEBUG
 			printf("[ERROR]\t[I2C]\t\tioctl: %s\n", strerror(errno));
 #endif
-			errorCode = APP_REPORT(I2C_ERROR, WRITING_IOCTL_FILE);
+			errorCode = APP_REPORT(I2C, WRITING_IOCTL_FILE);
 		}
 
 	}else{
@@ -122,10 +135,13 @@ error_type write_i2c_data(i2c_device_struct *i2c_dev)
 #ifdef DEBUG
 		printf("[ERROR]\t[I2C]\t\tOpen I2C port file: %s \n", strerror(errno));
 #endif
-		errorCode = APP_REPORT(I2C_ERROR, OPENING_I2C_PORT);
+		errorCode = APP_REPORT(I2C, OPENING_I2C_PORT);
 	}
 
 	close(i2c_file);
+
+	// Desbloqueo mutex
+	pthread_mutex_unlock (&i2c_mutex);
 
 	return errorCode;
 }

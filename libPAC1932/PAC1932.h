@@ -18,10 +18,13 @@
 #include <string.h>
 #include <dirent.h>
 #include <dlfcn.h>
+
 #include "../libI2C/I2C_export.h"
+#include "../libGPIO/GPIO_export.h"
+
 #include "../../app_includes/app_typedef.h"
 #include "../../app_includes/app_errors.h"
-#include "../libGPIO/GPIO_export.h"
+
 
 //#define	DEBUG
 
@@ -30,13 +33,6 @@
  */
 #define		PAC1932_LIBRARY_DIRECTORY	"/usr/lib/"
 #define		PAC1932_LIBRARY_NAME		"libPAC1932.so.1"
-
-/*
- * PAC1932 Errors
- */
-#define		LOADING_I2C_LIBRARY				1
-#define		LOADING_GPIO_LIBRARY			2
-#define		READING_PAC1932_VALUES			3
 
 /*
  * PAC1932 Static Params

@@ -33,7 +33,7 @@ error_type PAC1932_Initialize(void)
 #ifdef DEBUG
 		printf("[ERROR]\t[PAC1932]\tLoading I2C library \n");
 #endif
-		errorCode = APP_REPORT(PAC1932_ERROR, LOADING_I2C_LIBRARY);
+		errorCode = APP_REPORT(PAC1932, LOADING_I2C_LIBRARY);
 
 	}else {
 #ifdef DEBUG
@@ -48,7 +48,7 @@ error_type PAC1932_Initialize(void)
 
 		if(libHandlerGPIO == NULL){
 
-			errorCode = APP_REPORT(PAC1932_ERROR, LOADING_GPIO_LIBRARY);
+			errorCode = APP_REPORT(PAC1932, LOADING_GPIO_LIBRARY);
 #ifdef DEBUG
 		printf("[ERROR]\t[PAC1932]\tLoading GPIO library \n");
 #endif
@@ -231,7 +231,7 @@ error_type PAC1932_GetAllValues(PAC1932_struct* PAC1932_Value)
 	printf("[ERROR]\t[PAC1932]\tReading PAC1932 values \n");
 #endif
 
-	return APP_REPORT(PAC1932_ERROR, READING_PAC1932_VALUES);
+	return APP_REPORT(PAC1932, READING_PAC1932_VALUES);
 }
 
 

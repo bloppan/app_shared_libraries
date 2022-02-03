@@ -7,6 +7,8 @@
 
 #include "GPIO.h"
 
+static pthread_mutex_t gpio_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 //#define	DEBUG
 
 /**
@@ -23,11 +25,14 @@ error_type configGPIO(uint8_t gpio, char* direction)
 	char 		gpio_str[4] = {0}; 			// String gpio
 	char		gpio_path_str[50] = {0}; 	// String path gpio
 
+	// Bloqueo mutex
+	pthread_mutex_lock (&gpio_mutex);
+
 	fd_export = open("/sys/class/gpio/export", O_WRONLY);
 
 	if(fd_export < 0){
 
-		codeError = APP_REPORT(GPIO_ERROR, OPENING_EXPORT_FILE);
+		codeError = APP_REPORT(GPIO, OPENING_EXPORT_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tOpening GPIO %d export file: %s \n", gpio, strerror(errno));
 #endif
@@ -41,7 +46,7 @@ error_type configGPIO(uint8_t gpio, char* direction)
 		// Exporta el pin escribiendo el numero de gpio en el fichero /sys/class/gpio/export
 		if(write(fd_export, gpio_str, strlen(gpio_str)) < 1){
 
-			codeError = APP_REPORT(GPIO_ERROR, WRITING_EXPORT_FILE);
+			codeError = APP_REPORT(GPIO, WRITING_EXPORT_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tWriting GPIO %d export file: %s. Maybe the GPIO is already exported \n", gpio, strerror(errno));
 #endif
@@ -53,7 +58,7 @@ error_type configGPIO(uint8_t gpio, char* direction)
 
 			if(fd_direction < 0){
 
-				codeError = APP_REPORT(GPIO_ERROR, OPENING_DIRECTION_FILE);
+				codeError = APP_REPORT(GPIO, OPENING_DIRECTION_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tOpening gpio direction file: %s \n", strerror(errno));
 #endif
@@ -63,7 +68,7 @@ error_type configGPIO(uint8_t gpio, char* direction)
 
 					if(write(fd_direction, "out", strlen("out")) < 0){
 
-						codeError = APP_REPORT(GPIO_ERROR, WRITING_DIRECTION_FILE);
+						codeError = APP_REPORT(GPIO, WRITING_DIRECTION_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tSetting GPIO %d as output \n", gpio);
 #endif
@@ -76,7 +81,7 @@ error_type configGPIO(uint8_t gpio, char* direction)
 
 					if(write(fd_direction, "in", strlen("in")) < 0){
 
-						codeError = APP_REPORT(GPIO_ERROR, WRITING_DIRECTION_FILE);
+						codeError = APP_REPORT(GPIO, WRITING_DIRECTION_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tSetting GPIO %d as input \n", gpio);
 #endif
@@ -86,7 +91,7 @@ error_type configGPIO(uint8_t gpio, char* direction)
 #endif
 					}
 				}else{
-					codeError = APP_REPORT(GPIO_ERROR, INVALID_DIRECTION_VALUE);
+					codeError = APP_REPORT(GPIO, INVALID_DIRECTION_VALUE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tDirection \"%s\" is not valid. Must be \"out\" or \"in\" \n", direction);
 #endif
@@ -96,6 +101,9 @@ error_type configGPIO(uint8_t gpio, char* direction)
 		}
 		close(fd_export);
 	}
+
+	// Desbloqueo mutex
+	pthread_mutex_unlock (&gpio_mutex);
 
 	return codeError;
 }
@@ -111,11 +119,14 @@ error_type freeGPIO(uint8_t gpio)
 	int8_t 		fd_unexport;					// File descriptor export file
 	char 		gpio_str[4] = {0}; 			// String gpio
 
+	// Bloqueo mutex
+	pthread_mutex_lock (&gpio_mutex);
+
 	fd_unexport = open("/sys/class/gpio/unexport", O_WRONLY);
 
 	if(fd_unexport < 0){
 
-		codeError = APP_REPORT(GPIO_ERROR, OPENING_UNEXPORT_FILE);
+		codeError = APP_REPORT(GPIO, OPENING_UNEXPORT_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tOpening gpio unexport file: %s \n", strerror(errno));
 #endif
@@ -130,7 +141,7 @@ error_type freeGPIO(uint8_t gpio)
 		// Exporta el pin escribiendo el numero de gpio en el fichero /sys/class/gpio/export
 		if(write(fd_unexport, gpio_str, strlen(gpio_str)) < 1){
 
-			codeError = APP_REPORT(GPIO_ERROR, WRITING_UNEXPORT_FILE);
+			codeError = APP_REPORT(GPIO, WRITING_UNEXPORT_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tWriting GPIO %d unexport file: %s. Maybe the GPIO is already unexported \n", gpio, strerror(errno));
 #endif
@@ -142,6 +153,9 @@ error_type freeGPIO(uint8_t gpio)
 
 		close(fd_unexport);
 	}
+
+	// Desbloqueo mutex
+	pthread_mutex_unlock (&gpio_mutex);
 
 	return codeError;
 }
@@ -163,18 +177,21 @@ error_type getGPIO_Value(uint8_t gpio, uint8_t* value)
 
 	sprintf(gpio_path_str, "/sys/class/gpio/gpio%d/value", gpio);
 
+	// Bloqueo mutex
+	pthread_mutex_lock (&gpio_mutex);
+
 	fd_value = open(gpio_path_str, O_RDONLY);
 
 	if(fd_value < 0){
 
-		codeError = APP_REPORT(GPIO_ERROR, OPENING_VALUE_FILE);
+		codeError = APP_REPORT(GPIO, OPENING_VALUE_FILE);
 #ifdef DEBUG
 	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
 	}else{
 		if(read(fd_value, gpio_value_str, 1) < 1){
 
-			codeError = APP_REPORT(GPIO_ERROR, READING_VALUE_FILE);
+			codeError = APP_REPORT(GPIO, READING_VALUE_FILE);
 #ifdef DEBUG
 	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
@@ -188,6 +205,9 @@ error_type getGPIO_Value(uint8_t gpio, uint8_t* value)
 
 		close(fd_value);
 	}
+
+	// Desbloqueo mutex
+	pthread_mutex_unlock (&gpio_mutex);
 
 	return codeError;
 }
@@ -207,18 +227,21 @@ error_type getGPIO_Direction(uint8_t gpio, char* direction)
 
 	sprintf(gpio_path_str, "/sys/class/gpio/gpio%d/direction", gpio);
 
+	// Bloqueo mutex
+	pthread_mutex_lock (&gpio_mutex);
+
 	fd_direction = open(gpio_path_str, O_RDONLY);
 
 	if(fd_direction < 0){
 
-		codeError = APP_REPORT(GPIO_ERROR, OPENING_DIRECTION_FILE);
+		codeError = APP_REPORT(GPIO, OPENING_DIRECTION_FILE);
 #ifdef DEBUG
 	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
 	}else{
 		if(read(fd_direction, direction, 4) < 2){
 
-			codeError = APP_REPORT(GPIO_ERROR, READING_DIRECTION_FILE);
+			codeError = APP_REPORT(GPIO, READING_DIRECTION_FILE);
 #ifdef DEBUG
 	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
@@ -231,6 +254,9 @@ error_type getGPIO_Direction(uint8_t gpio, char* direction)
 
 		close(fd_direction);
 	}
+
+	// Desbloqueo mutex
+	pthread_mutex_unlock (&gpio_mutex);
 
 	return codeError;
 }
@@ -250,6 +276,9 @@ error_type setGPIO_Value(uint8_t gpio, uint8_t value)
 
 	int8_t	fd_value;
 
+	// Bloqueo mutex
+	pthread_mutex_lock (&gpio_mutex);
+
 	if(value >= 0 && value <= 1) {
 
 		sprintf(gpio_path_str, "/sys/class/gpio/gpio%d/value", gpio);
@@ -258,7 +287,7 @@ error_type setGPIO_Value(uint8_t gpio, uint8_t value)
 
 		if(fd_value < 0){
 
-			codeError = APP_REPORT(GPIO_ERROR, OPENING_VALUE_FILE);
+			codeError = APP_REPORT(GPIO, OPENING_VALUE_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t\t[GPIO]\tOpening GPIO %d value file: %s \n", gpio, strerror(errno));
 #endif
@@ -268,7 +297,7 @@ error_type setGPIO_Value(uint8_t gpio, uint8_t value)
 
 			if(write(fd_value, gpio_value_str, strlen(gpio_value_str)) < 0){
 
-				codeError = APP_REPORT(GPIO_ERROR, WRITING_VALUE_FILE);
+				codeError = APP_REPORT(GPIO, WRITING_VALUE_FILE);
 #ifdef DEBUG
 		printf("[ERROR]\t\t[GPIO]\tWriting GPIO %d value file: %s \n", gpio, strerror(errno));
 #endif
@@ -282,11 +311,14 @@ error_type setGPIO_Value(uint8_t gpio, uint8_t value)
 		}
 	}else{
 
-		codeError = APP_REPORT(GPIO_ERROR, INVALID_OUTPUT_VALUE);
+		codeError = APP_REPORT(GPIO, INVALID_OUTPUT_VALUE);
 #ifdef DEBUG
 		printf("[ERROR]\t[GPIO]\t\tValue must be \"0\" or \"1\" \n");
 #endif
 	}
+
+	// Desbloqueo mutex
+	pthread_mutex_unlock (&gpio_mutex);
 
 	return codeError;
 }

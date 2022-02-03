@@ -17,7 +17,10 @@
 #include <errno.h>
 #include <stdint.h>
 #include <string.h>
+#include <pthread.h>
+
 #include "../../app_includes/app_typedef.h"
+#include "../../app_includes/app_errors.h"
 
 //#define 	DEBUG
 
@@ -29,12 +32,6 @@
  */
 #define		I2C_LIBRARY_DIRECTORY	"/usr/lib/"
 #define		I2C_LIBRARY_NAME		"libI2C.so.1"
-
-/*
- * I2C Errors
- */
-#define		OPENING_I2C_PORT			1
-#define		WRITING_IOCTL_FILE			2
 
 /*
  * @brief	Estructura de parametros I2C de un dispositivo

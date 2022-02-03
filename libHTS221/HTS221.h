@@ -29,14 +29,6 @@
 #define		HTS221_LIBRARY_NAME			"libHTS221.so.1"
 
 /*
- * HTS221 Errors
- */
-#define		LOADING_I2C_LIBRARY				1
-#define		READING_CALIBRATION_VALUES		2
-#define		READING_HUMIDITY				3
-#define		READING_TEMPERATURE				4
-
-/*
  * HTS221 I2C DATA
  */
 #define		HTS221_ADDR			0x5F	/*	HTS221 I2C Address	*/

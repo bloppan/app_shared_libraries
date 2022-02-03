@@ -87,7 +87,7 @@ error_type setLED_Value(uint8_t LEDn, uint8_t color)
 			break;
 		default:
 
-			errorCode = APP_REPORT(PCA9532_ERROR, INCORRECT_COLOR);
+			errorCode = APP_REPORT(PCA9532, INCORRECT_COLOR);
 #ifdef DEBUG
 			printf("[ERROR]\t[PCA9532]\tIncorrect color \n");
 #endif
@@ -106,7 +106,7 @@ error_type setLED_Value(uint8_t LEDn, uint8_t color)
 	if(write_i2c_data(&PCA9532_I2C_info) != NO_ERROR) {
 
 #ifdef DEBUG
-		errorCode = APP_REPORT(PCA9532_ERROR, SETTING_LED_COLOR);
+		errorCode = APP_REPORT(PCA9532, SETTING_LED_COLOR);
 		printf("[ERROR]\t[PCA9532]\tWriting LED color \n");
 #endif
 	}else{
@@ -117,7 +117,6 @@ error_type setLED_Value(uint8_t LEDn, uint8_t color)
 	}
 
 	return errorCode;
-
 }
 
 /*
@@ -142,7 +141,7 @@ error_type PCA9532_Initialize(void)
 
 	if(libHandlerI2C == NULL) {
 
-		errorCode = APP_REPORT(PCA9532_ERROR, LOADING_I2C_LIBRARY);
+		errorCode = APP_REPORT(PCA9532, LOADING_I2C_LIBRARY);
 #ifdef DEBUG
 		printf("[ERROR]\t[PCA9532]\tLoading I2C library\n");
 #endif
@@ -159,7 +158,7 @@ error_type PCA9532_Initialize(void)
 
 			if(libHandlerGPIO == NULL){
 
-				errorCode = APP_REPORT(PCA9532_ERROR, LOADING_GPIO_LIBRARY);
+				errorCode = APP_REPORT(PCA9532, LOADING_GPIO_LIBRARY);
 	#ifdef DEBUG
 			printf("[ERROR]\t[PCA9532]\tLoading GPIO library \n");
 	#endif

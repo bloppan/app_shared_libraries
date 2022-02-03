@@ -1,13 +1,11 @@
-PCA9532.d: ../PCA9532.c ../PCA9532.h ../../libI2C/I2C_export.h \
+HTS221.d: ../HTS221.c ../HTS221.h ../../libI2C/I2C_export.h \
  ../../libI2C/I2C.h ../../libI2C/../../app_includes/app_typedef.h \
  ../../libI2C/../../app_includes/app_errors.h \
  ../../libI2C/../../app_includes/app_typedef.h \
- ../../libI2C/../../app_includes/app_errors.h ../../libGPIO/GPIO_export.h \
- ../../libGPIO/GPIO.h ../../libGPIO/../../app_includes/app_typedef.h \
- ../../libGPIO/../../app_includes/app_errors.h \
+ ../../libI2C/../../app_includes/app_errors.h \
  ../../../app_includes/app_errors.h ../../../app_includes/app_typedef.h
 
-../PCA9532.h:
+../HTS221.h:
 
 ../../libI2C/I2C_export.h:
 
@@ -20,14 +18,6 @@ PCA9532.d: ../PCA9532.c ../PCA9532.h ../../libI2C/I2C_export.h \
 ../../libI2C/../../app_includes/app_typedef.h:
 
 ../../libI2C/../../app_includes/app_errors.h:
-
-../../libGPIO/GPIO_export.h:
-
-../../libGPIO/GPIO.h:
-
-../../libGPIO/../../app_includes/app_typedef.h:
-
-../../libGPIO/../../app_includes/app_errors.h:
 
 ../../../app_includes/app_errors.h:
 

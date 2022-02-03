@@ -127,7 +127,7 @@ static error_type	HTS221_getCalibrationValues(void)
 	printf("[ERROR]\t[HTS221]\tReading HTS221 calibration values \n");
 #endif
 
-	return APP_REPORT(HTS221_ERROR, READING_CALIBRATION_VALUES);
+	return APP_REPORT(HTS221, READING_CALIBRATION_VALUES);
 }
 
 /*
@@ -160,7 +160,7 @@ error_type	HTS221_getHumidity(float *Hum)
 	printf("[ERROR]\t[HTS221]\tReading HTS221 humidity value \n");
 #endif
 
-	return APP_REPORT(HTS221_ERROR, READING_HUMIDITY);
+	return APP_REPORT(HTS221, READING_HUMIDITY);
 }
 
 /*
@@ -193,7 +193,7 @@ error_type	HTS221_getTemperature(float *Temp)
 	printf("[ERROR]\t[HTS221]\tReading HTS221 temperature value \n");
 #endif
 
-	return APP_REPORT(HTS221_ERROR, READING_TEMPERATURE);
+	return APP_REPORT(HTS221, READING_TEMPERATURE);
 }
 /*
  * @brief	Funcion de inicializacion del sensor HTS221. Se cargan las funciones de comunicacion I2C y se
@@ -214,7 +214,7 @@ error_type HTS221_Initialize(void)
 
 	if(libHandlerI2C == NULL) {
 
-		errorCode = APP_REPORT(HTS221_ERROR, LOADING_I2C_LIBRARY);
+		errorCode = APP_REPORT(HTS221, LOADING_I2C_LIBRARY);
 #ifdef DEBUG
 		printf("[ERROR]\t[HTS221]\tLoading I2C library\n");
 #endif

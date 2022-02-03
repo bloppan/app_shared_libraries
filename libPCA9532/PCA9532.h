@@ -11,6 +11,9 @@
 #include "../libI2C/I2C_export.h"
 #include "../libGPIO/GPIO_export.h"
 
+#include "../../app_includes/app_errors.h"
+#include "../../app_includes/app_typedef.h"
+
 #include <dlfcn.h>
 
 /*
@@ -33,15 +36,6 @@
 
 //	PCA9532 I2C Address
 #define	PCA9532_ADDR	0x67
-
-/*
- * PCA9532 Errors
- */
-#define	LOADING_I2C_LIBRARY		1
-#define	LOADING_GPIO_LIBRARY	2
-#define	INCORRECT_COLOR			3
-#define	SETTING_LED_COLOR		4
-
 
 /*
  * LED struct
