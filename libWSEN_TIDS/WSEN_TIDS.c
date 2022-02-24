@@ -5,7 +5,7 @@
  *      Author: bernar
  */
 
-#include "libWSEN_TIDS.h"
+#include "WSEN_TIDS.h"
 
 static i2c_device_struct WSEN_i2c_info = {0};	// Estructura de parametros I2C del sensor WSEN-TIDS
 

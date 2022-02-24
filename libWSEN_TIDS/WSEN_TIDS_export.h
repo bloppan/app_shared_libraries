@@ -8,7 +8,7 @@
 #ifndef LIBWSEN_TIDS_EXPORT_H_
 #define LIBWSEN_TIDS_EXPORT_H_
 
-#include "libWSEN_TIDS.h"
+#include "WSEN_TIDS.h"
 
 error_type (*WSEN_TIDS_Initialize)(void);
 error_type (*WSEN_TIDS_getTemperature)(float*);
