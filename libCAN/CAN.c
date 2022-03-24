@@ -7,117 +7,145 @@
 
 #include "CAN.h"
 
-static int s;						// Socket
-static struct sockaddr_can addr;	// Socket address
-static struct ifreq ifr;			// Interface name
-
 /**
- * @brief	Inicializa la interfaz CAN y configura el socket con el driver
+ * @brief	Inicializa la interfaz CAN
  * @param	interface	Interfaz a configurar
- * @param	speed		Velocidad de transmision a configurar (en b/s)
  * @retval	Codigo de error
  */
-error_type CAN_Initialize(char* interface, char* speed)
+error_type CAN_Initialize(struct can_message * can_data)
 {
-
-    FILE *fp;
+	error_type codeError = NO_ERROR;
+	int todo_broadcast = 1;
+	int ret = 0;
     char command[100];
 
-    /* command contains the command string (a character array) */
     memset(command, 0, sizeof(command));
-    sprintf(command, "/sbin/ifconfig %s down", interface);
+    sprintf(command, "/sbin/ifconfig can0 down");
     printf("command = %s \n", command);
-    fp = popen(command,"r");
+    popen(command,"r");
 
     sleep(1);
 
     memset(command, 0, sizeof(command));
-    sprintf(command, "ip link set can0 type can bitrate %s", speed);
+    sprintf(command, "ip link set can0 type can bitrate 500000");
     printf("command = %s \n", command);
-    fp = popen(command,"r");
+    popen(command,"r");
 
     sleep(1);
 
     memset(command, 0, sizeof(command));
-    sprintf(command, "/sbin/ifconfig %s up", interface);
+    sprintf(command, "/sbin/ifconfig can0 up");
     printf("command = %s \n", command);
-    fp = popen(command,"r");
-
-    fclose(fp);
+    popen(command,"r");
 
     sleep(1);
 
-    // Abre un socket a la CAN Network
-	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
+	can_data->socket = socket(PF_CAN, SOCK_DGRAM, CAN_J1939);
 
-		printf("[ERROR]\t[CAN]\t\tOpening socket: %s", strerror(errno));
+	if(setsockopt(can_data->socket, SOL_SOCKET, SO_BROADCAST, &todo_broadcast, sizeof(todo_broadcast))){
 
+		printf("[ERROR]\t\t[CAN]\t Opening socket \n");
 		return APP_REPORT(CAN, OPENING_SOCKET);
 	}
 
-	strcpy(ifr.ifr_name, interface);
+	return NO_ERROR;
+}
+/**
+ * @brief	Configura la interfaz CAN
+ * @param	can_data	Puntero a estructura de datos CAN
+ * @retval	Codigo de error
+ */
+error_type CAN_Configure(struct can_message * can_data)
+{
 
-	// Se pasa al socket el nombre de la interfaz CAN
-	if(ioctl(s, SIOCGIFINDEX, &ifr) < 0){
+	can_data->addr.can_family = AF_CAN;
+	can_data->addr.can_addr.j1939.name = J1939_NO_NAME;
+	can_data->addr.can_addr.j1939.addr = 0x20;
+	can_data->addr.can_addr.j1939.pgn = J1939_NO_PGN;
+	can_data->addr.can_ifindex = if_nametoindex("can0");
 
-		printf("[ERROR]\t[CAN]\t\tioctl: %s \n", strerror(errno));
-
-		return APP_REPORT(CAN, WRITING_IOCTL_FILE);
-	}
-
-	memset(&addr, 0, sizeof(addr));
-
-	addr.can_family = AF_CAN;
-	addr.can_ifindex = ifr.ifr_ifindex;
-
-	// Intenta conectarse a la interfaz CAN
-	if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-
-		printf("[ERROR]\t[CAN]\t\tbind: %s \n", strerror(errno));
+	if(bind(can_data->socket, (struct sockaddr *)&can_data->addr, sizeof(can_data->addr))){
 
 		return APP_REPORT(CAN, BIND_CALL);
 	}
 
 	return NO_ERROR;
 }
-
 /**
- * @brief	Inicializa la interfaz CAN y configura el socket con el driver
- * @param	frame	Estructura que contiene la informacion de la trama CAN a enviar
+ * @brief	Envia una trama CAN
+ * @param	can_data	Puntero a estructura de datos CAN
  * @retval	Codigo de error
  */
-error_type CAN_Send(struct can_frame* frame)
+error_type CAN_Send(struct can_message * can_data)
 {
 
-	// Envia a traves del socket la informacion de la trama CAN
-	if (write(s, frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+	if (write(can_data->socket, &can_data->frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
 
-		printf("[ERROR]\t[CAN]\t\tSend frame: %s \n", strerror(errno));
-
+		perror("CAN Send: ");
 		return APP_REPORT(CAN, SEND_FRAME);
 	}
 
 	return NO_ERROR;
 }
-
 /**
- * @brief	Inicializa la interfaz CAN y configura el socket con el driver
+ * @brief	Envia un fichero por el bus CAN
+ * @param	can_data	Puntero a estructura de datos CAN
+ * @param	path		Ruta donde se encuentra el fichero
+ * @retval	Codigo de error
+ */
+error_type CAN_SendFile(struct can_message * can_data, char * path)
+{
+	char json_array[2000];
+	uint32_t n_bytes = 0, j = 0;
+
+	FILE *file = fopen(path, "r");
+
+	memset(json_array, 0, sizeof(json_array));
+
+	while(!feof(file)){
+
+		fscanf(file, "%c", &json_array[n_bytes++]);
+	}
+
+	fclose(file);
+
+
+	if (write(can_data->socket, json_array, n_bytes) != n_bytes) {
+
+		perror("[ERROR]\t[CAN]\t\tSending message: ");
+		return APP_REPORT(CAN, SEND_FRAME);
+	}else{
+		printf("[OK]\t[CAN]\t\tMessage sent: %s \n", json_array);
+	}
+
+	return NO_ERROR;
+}
+/**
+ * @brief	Recepcion de tramas CAN
  * @param	frame	Estructura que contiene la informacion de la trama CAN a recibir
  * @retval	Codigo de error
  */
-error_type CAN_Receive(struct can_frame* frame)
+error_type CAN_Receive(struct can_message * can_data)
 {
-	int nbytes;
+	int nbytes, i;
 
-	// Lee a traves del socket y almacena la informacion CAN en la estructura frame
-	nbytes = read(s, frame, sizeof(struct can_frame));
+	nbytes = read(can_data->socket, &can_data->frame, sizeof(struct can_frame));
 
  	if (nbytes < 0) {
 
-		printf("[ERROR]\t[CAN]\t\tReceive frame: %s \n", strerror(errno));
-
+		perror("CAN Read: ");
 		return APP_REPORT(CAN, RECEIVE_FRAME);
 	}
+
+ 	// Imprime la trama recibida
+	printf("0x%03X [%d] ",can_data->frame.can_id, can_data->frame.can_dlc);
+
+	for (i = 0; i < can_data->frame.can_dlc; i++){
+
+		printf("%02X ", can_data->frame.data[i]);
+	}
+
+	printf("\r\n");
 
 	return NO_ERROR;
 }

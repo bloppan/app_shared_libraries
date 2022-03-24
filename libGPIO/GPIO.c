@@ -193,7 +193,7 @@ error_type getGPIO_Value(uint8_t gpio, uint8_t* value)
 
 			codeError = APP_REPORT(GPIO, READING_VALUE_FILE);
 #ifdef DEBUG
-	printf("[ERROR]\t[GPIO]\t\tOpening gpio %d value file: %s \n", gpio, strerror(errno));
+	printf("[ERROR]\t[GPIO]\t\tReading gpio %d value file: %s \n", gpio, strerror(errno));
 #endif
 		}else{
 

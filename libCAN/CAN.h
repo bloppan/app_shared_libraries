@@ -21,13 +21,11 @@
 
 #include <linux/can.h>
 #include <linux/can/raw.h>
+#include <linux/can/j1939.h>
 
 #include "../../app_includes/app_typedef.h"
 #include "../../app_includes/app_errors.h"
 
 
-error_type CAN_Initialize(char* interface, char* speed);
-error_type CAN_Send(struct can_frame* frame);
-error_type CAN_Receive(struct can_frame* frame);
 
 #endif /* CAN_H_ */
