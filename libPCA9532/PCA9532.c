@@ -15,9 +15,10 @@ static i2c_device_struct	PCA9532_I2C_info = {0};
  * @brief	Funcion que configura un LED de un color
  * @param	LEDn	Led que se quiere configurar
  * @param	color	Color del led
+ * @param	blink	Parpadeo (0 -> led fijo) (1 -> led con parpadeo)
  * @retval	Codigo de error
  */
-error_type setLED_Value(uint8_t LEDn, uint8_t color)
+error_type setLED_Color_Blink(uint8_t LEDn, uint8_t color, uint8_t blink)
 {
 	error_type errorCode = NO_ERROR;
 	uint8_t buffer[3] = {0};
@@ -26,7 +27,7 @@ error_type setLED_Value(uint8_t LEDn, uint8_t color)
 
 		case BLUE:
 
-			LED[LEDn*3 + BLUE].value 	= 1;
+			LED[LEDn*3 + BLUE].value 	= 1 + blink;
 			LED[LEDn*3 + GREEN].value 	= 0;
 			LED[LEDn*3 + RED].value 	= 0;
 
@@ -34,7 +35,7 @@ error_type setLED_Value(uint8_t LEDn, uint8_t color)
 		case GREEN:
 
 			LED[LEDn*3 + BLUE].value 	= 0;
-			LED[LEDn*3 + GREEN].value 	= 1;
+			LED[LEDn*3 + GREEN].value 	= 1 + blink;
 			LED[LEDn*3 + RED].value 	= 0;
 
 
@@ -43,38 +44,38 @@ error_type setLED_Value(uint8_t LEDn, uint8_t color)
 
 			LED[LEDn*3 + BLUE].value 	= 0;
 			LED[LEDn*3 + GREEN].value	= 0;
-			LED[LEDn*3 + RED].value 	= 1;
+			LED[LEDn*3 + RED].value 	= 1 + blink;
 
 			break;
 		case PURPLE:
 
-			LED[LEDn*3 + BLUE].value 	= 1;
+			LED[LEDn*3 + BLUE].value 	= 1 + blink;
 			LED[LEDn*3 + GREEN].value 	= 0;
-			LED[LEDn*3 + RED].value 	= 1;
+			LED[LEDn*3 + RED].value 	= 1 + blink;
 
 			break;
 
 		case YELLOW:
 
 			LED[LEDn*3 + BLUE].value 	= 0;
-			LED[LEDn*3 + GREEN].value 	= 1;
-			LED[LEDn*3 + RED].value 	= 1;
+			LED[LEDn*3 + GREEN].value 	= 1 + blink;
+			LED[LEDn*3 + RED].value 	= 1 + blink;
 
 			break;
 
 		case CYAN:
 
-			LED[LEDn*3 + BLUE].value 	= 1;
-			LED[LEDn*3 + GREEN].value 	= 1;
+			LED[LEDn*3 + BLUE].value 	= 1 + blink;
+			LED[LEDn*3 + GREEN].value 	= 1 + blink;
 			LED[LEDn*3 + RED].value 	= 0;
 
 			break;
 
 		case WHITE:
 
-			LED[LEDn*3 + BLUE].value 	= 1;
-			LED[LEDn*3 + GREEN].value 	= 1;
-			LED[LEDn*3 + RED].value 	= 1;
+			LED[LEDn*3 + BLUE].value 	= 1 + blink;
+			LED[LEDn*3 + GREEN].value 	= 1 + blink;
+			LED[LEDn*3 + RED].value 	= 1 + blink;
 
 			break;
 
@@ -118,7 +119,50 @@ error_type setLED_Value(uint8_t LEDn, uint8_t color)
 
 	return errorCode;
 }
+/*
+ * @brief	Configuracion del parpadeo de leds
+ * @retval	Codigo de error
+ */
+void PCA9532_Configure_Blink(void)
+{
+	uint8_t buffer[1] = {0};
 
+	// Valor que se va a guardar en el registro PSC0
+	buffer[0] = 0x77;
+
+	// Datos del envio I2C
+	PCA9532_I2C_info.reg_addr 	= 0x02; // PSC0 reg address
+	PCA9532_I2C_info.length		= 1;
+	PCA9532_I2C_info.data		= buffer;
+
+	if(write_i2c_data(&PCA9532_I2C_info) != NO_ERROR) {
+
+#ifdef DEBUG
+		printf("[ERROR]\t[PCA9532]\tWriting LED color \n");
+#endif
+	}else{
+#ifdef DEBUG
+		printf("[OK]\t[PCA9532]\tLED color set \n");
+#endif
+	}
+
+	// Valor que se va a guardar en el registro PSC1
+	buffer[0] = 0xEE;
+
+	// Datos del envio I2C
+	PCA9532_I2C_info.reg_addr 	= 0x04; // PSC1 reg address
+
+	if(write_i2c_data(&PCA9532_I2C_info) != NO_ERROR) {
+
+#ifdef DEBUG
+		printf("[ERROR]\t[PCA9532]\tWriting LED color \n");
+#endif
+	}else{
+#ifdef DEBUG
+		printf("[OK]\t[PCA9532]\tLED color set \n");
+#endif
+	}
+}
 /*
  * @brief	Funcion de inicializacion del PCA9532
  * @retval	Codigo de error
@@ -184,6 +228,9 @@ error_type PCA9532_Initialize(void)
 				/*	Inicializacion de la estructura de datos I2C del sensor PCA9532	*/
 				PCA9532_I2C_info.i2c_port 	= I2C_0;
 				PCA9532_I2C_info.dev_addr	= PCA9532_ADDR;
+
+				// Configura el registro PSC0 (parpadeo)
+				PCA9532_Configure_Blink();
 			}
 	}
 

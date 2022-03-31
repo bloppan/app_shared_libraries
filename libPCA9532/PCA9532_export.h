@@ -10,7 +10,7 @@
 
 #include "PCA9532.h"
 
-error_type (*setLED_Value)(uint8_t LEDn, uint8_t color);
+error_type (*setLED_Color_Blink)(uint8_t LEDn, uint8_t color, uint8_t blink);
 error_type (*PCA9532_Initialize)(void);
 
 #endif /* PCA9532_EXPORT_H_ */
